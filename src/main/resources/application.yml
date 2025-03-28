@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: grpc-auth
+    port: 9090
+  authentication:
+    project_id: ${PROJECT_ID:grpc-identity-platform-test}
