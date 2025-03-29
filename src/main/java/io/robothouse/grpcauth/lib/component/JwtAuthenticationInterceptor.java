@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @GlobalServerInterceptor
 public class JwtAuthenticationInterceptor implements ServerInterceptor {
@@ -30,27 +32,24 @@ public class JwtAuthenticationInterceptor implements ServerInterceptor {
             Metadata headers,
             ServerCallHandler<Req, Res> next
     ) {
+        log.info("Custom JwtAuthenticationInterceptor invoked");
 
-        log.info("I ran!!!!");
-
+        Context ctx;
         String authHeader = headers.get(AUTHORIZATION_METADATA_KEY);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring("Bearer ".length());
             try {
                 Jwt jwt = jwtDecoder.decode(token);
-                Context ctx = Context.current().withValue(JwtConstants.JWT_CONTEXT_KEY, jwt);
-                return Contexts.interceptCall(ctx, call, headers, next);
+                log.error("JWT validation successful. Token issued by: {}", jwt.getIssuer());
+                ctx = Context.current().withValue(JwtConstants.JWT_CONTEXT_KEY, Optional.of(jwt));
             } catch (JwtException e) {
-                log.error("JWT validation failed", e);
-                call.close(Status.UNAUTHENTICATED.withDescription("Invalid JWT Token: " + e.getMessage()), headers);
-                return new ServerCall.Listener<>() {
-                };
+                log.error("JWT validation failed: {}", e.getMessage());
+                ctx = Context.current().withValue(JwtConstants.JWT_CONTEXT_KEY, Optional.empty());
             }
         } else {
-            log.warn("Missing or malformed Authorization header");
-            call.close(Status.UNAUTHENTICATED.withDescription("Missing or malformed Authorization header"), headers);
-            return new ServerCall.Listener<>() {
-            };
+            log.error("Missing or malformed Authorization header");
+            ctx = Context.current().withValue(JwtConstants.JWT_CONTEXT_KEY, Optional.empty());
         }
+        return Contexts.interceptCall(ctx, call, headers, next);
     }
 }

@@ -11,6 +11,7 @@ service TokenService {
 }
 
 message ValidateTokenResponse {
-  bool valid = 1;
-  string message = 2;
+  bool success = 1;
+  int32 statusCode = 2;
+  string statusMessage = 4;
 }
