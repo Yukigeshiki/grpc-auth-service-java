@@ -10,8 +10,17 @@ service TokenService {
   rpc ValidateToken(google.protobuf.Empty) returns (ValidateTokenResponse);
 }
 
-message ValidateTokenResponse {
+message TokenResponsePayload {
   bool success = 1;
   int32 statusCode = 2;
-  string statusMessage = 4;
+  string statusMessage = 3;
+}
+
+message ValidateTokenResponse {
+  // The unique request identifier.
+  string requestId = 1;
+  // The date/time when the response was generated.
+  string datetime = 2;
+  // Nested payload containing the authentication result.
+  TokenResponsePayload payload = 3;
 }

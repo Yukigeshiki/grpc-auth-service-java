@@ -1,7 +1,7 @@
 package io.robothouse.grpcauth.lib.component;
 
 import io.grpc.*;
-import io.robothouse.grpcauth.lib.util.JwtConstants;
+import io.robothouse.grpcauth.lib.util.CtxConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.grpc.server.GlobalServerInterceptor;
@@ -27,28 +27,26 @@ public class JwtAuthenticationInterceptor implements ServerInterceptor {
     }
 
     @Override
-    public <Req, Res> ServerCall.Listener<Req> interceptCall(
-            ServerCall<Req, Res> call,
+    public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(
+            ServerCall<ReqT, RespT> call,
             Metadata headers,
-            ServerCallHandler<Req, Res> next
+            ServerCallHandler<ReqT, RespT> next
     ) {
-        log.info("Custom JwtAuthenticationInterceptor invoked");
-
         Context ctx;
         String authHeader = headers.get(AUTHORIZATION_METADATA_KEY);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring("Bearer ".length());
             try {
                 Jwt jwt = jwtDecoder.decode(token);
-                log.error("JWT validation successful. Token issued by: {}", jwt.getIssuer());
-                ctx = Context.current().withValue(JwtConstants.JWT_CONTEXT_KEY, Optional.of(jwt));
+                log.info("JWT validation successful. Token issued by: {}", jwt.getIssuer());
+                ctx = Context.current().withValue(CtxConstants.JWT_CONTEXT_KEY, Optional.of(jwt));
             } catch (JwtException e) {
                 log.error("JWT validation failed: {}", e.getMessage());
-                ctx = Context.current().withValue(JwtConstants.JWT_CONTEXT_KEY, Optional.empty());
+                ctx = Context.current().withValue(CtxConstants.JWT_CONTEXT_KEY, Optional.empty());
             }
         } else {
             log.error("Missing or malformed Authorization header");
-            ctx = Context.current().withValue(JwtConstants.JWT_CONTEXT_KEY, Optional.empty());
+            ctx = Context.current().withValue(CtxConstants.JWT_CONTEXT_KEY, Optional.empty());
         }
         return Contexts.interceptCall(ctx, call, headers, next);
     }
