@@ -1,5 +1,7 @@
 # grpc-auth-service-java
 
+[![build](https://github.com/Yukigeshiki/grpc-auth-service-java/actions/workflows/ci.yml/badge.svg)](https://github.com/Yukigeshiki/grpc-auth-service-java/actions/workflows/ci.yml)
+
 An experimental gRPC authentication service using Spring Boot and GCP Identity Platform.
 
 To start the application:
