@@ -4,3 +4,7 @@ spring:
     port: 9090
   authentication:
     project_id: ${PROJECT_ID:grpc-identity-platform-test}
+  grpc:
+    server:
+      reflection:
+        enabled: true # should be set to false in production

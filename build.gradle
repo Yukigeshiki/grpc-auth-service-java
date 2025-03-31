@@ -26,6 +26,7 @@ dependencies {
     implementation 'org.springframework.grpc:spring-grpc-spring-boot-starter'
     implementation 'org.springframework.security:spring-security-oauth2-jose'
 
+    implementation 'io.grpc:grpc-services'
     implementation 'net.logstash.logback:logstash-logback-encoder:7.3'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
