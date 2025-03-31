@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public class CtxConstants {
     public static final Context.Key<Optional<Jwt>> JWT_CONTEXT_KEY = Context.key("jwt");
-    public static final Context.Key<String> REQUEST_ID = Context.key("requestId");
+    public static final Context.Key<String> REQUEST_ID_CONTEXT_KEY = Context.key("requestId");
 }

@@ -24,13 +24,14 @@ curl -X POST "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassw
 Once the above is completed and you have a token, run: 
 
 ```
-grpcurl -plaintext \                        
+grpcurl -plaintext \
+  -emit-defaults \
   -d '{}' \
   -H "Authorization: Bearer <jwt-token>" \
-  localhost:9090 TokenService/ValidateToken
+  localhost:9090 AuthService/Authenticate
 ```
 
-To run token service tests:
+To run auth service tests:
 ```
 ./gradlew clean check
 ```

@@ -31,7 +31,7 @@ public class RequestLoggingInterceptor implements ServerInterceptor {
         MDC.put("requestId", requestId);
         log.info("Incoming gRPC request for method: {}", methodName);
 
-        Context ctx = Context.current().withValue(CtxConstants.REQUEST_ID, requestId);
+        Context ctx = Context.current().withValue(CtxConstants.REQUEST_ID_CONTEXT_KEY, requestId);
         return Contexts.interceptCall(ctx, call, headers, next);
     }
 }

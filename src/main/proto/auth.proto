@@ -6,21 +6,21 @@ option java_outer_classname = "GrpcAuthProto";
 
 import "google/protobuf/empty.proto";
 
-service TokenService {
-  rpc ValidateToken(google.protobuf.Empty) returns (ValidateTokenResponse);
+service AuthService {
+  rpc Authenticate(google.protobuf.Empty) returns (AuthResponse);
 }
 
-message TokenResponsePayload {
+message AuthPayload {
   bool success = 1;
   int32 statusCode = 2;
   string statusMessage = 3;
 }
 
-message ValidateTokenResponse {
+message AuthResponse {
   // The unique request identifier.
   string requestId = 1;
   // The date/time when the response was generated.
   string datetime = 2;
   // Nested payload containing the authentication result.
-  TokenResponsePayload payload = 3;
+  AuthPayload payload = 3;
 }
