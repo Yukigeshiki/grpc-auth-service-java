@@ -2,8 +2,7 @@ package io.robothouse.grpcauth.lib.component;
 
 import io.grpc.*;
 import io.robothouse.grpcauth.lib.util.CtxConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.slf4j.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -12,12 +11,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Log4j2
 @Component
 @GlobalServerInterceptor
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class RequestLoggingInterceptor implements ServerInterceptor {
-
-    private static final Logger log = LoggerFactory.getLogger(RequestLoggingInterceptor.class);
 
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(

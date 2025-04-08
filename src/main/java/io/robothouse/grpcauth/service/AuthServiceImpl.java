@@ -6,17 +6,15 @@ import io.robothouse.grpcauth.lib.util.CtxConstants;
 import io.robothouse.grpcauth.proto.AuthPayload;
 import io.robothouse.grpcauth.proto.AuthResponse;
 import io.robothouse.grpcauth.proto.AuthServiceGrpc;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.grpc.server.service.GrpcService;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Log4j2
 @GrpcService
 public class AuthServiceImpl extends AuthServiceGrpc.AuthServiceImplBase {
-
-    private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     @Override
     public void authenticate(Empty request, StreamObserver<AuthResponse> responseObserver) {

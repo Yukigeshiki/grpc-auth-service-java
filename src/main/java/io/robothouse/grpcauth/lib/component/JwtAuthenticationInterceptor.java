@@ -2,8 +2,7 @@ package io.robothouse.grpcauth.lib.component;
 
 import io.grpc.*;
 import io.robothouse.grpcauth.lib.util.CtxConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.grpc.server.GlobalServerInterceptor;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -12,11 +11,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Log4j2
 @Component
 @GlobalServerInterceptor
 public class JwtAuthenticationInterceptor implements ServerInterceptor {
 
-    private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationInterceptor.class);
     private static final Metadata.Key<String> AUTHORIZATION_METADATA_KEY =
             Metadata.Key.of("Authorization", Metadata.ASCII_STRING_MARSHALLER);
 
