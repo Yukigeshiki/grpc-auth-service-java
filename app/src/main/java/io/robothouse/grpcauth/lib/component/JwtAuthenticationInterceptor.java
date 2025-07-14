@@ -32,11 +32,11 @@ public class JwtAuthenticationInterceptor implements ServerInterceptor {
             ServerCallHandler<ReqT, RespT> next
     ) {
         Context ctx;
-        String authHeader = headers.get(AUTHORIZATION_METADATA_KEY);
+        var authHeader = headers.get(AUTHORIZATION_METADATA_KEY);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring("Bearer ".length());
+            var token = authHeader.substring("Bearer ".length());
             try {
-                Jwt jwt = jwtDecoder.decode(token);
+                var jwt = jwtDecoder.decode(token);
                 log.info("JWT validation successful. Token issued by: {}", jwt.getIssuer());
                 ctx = Context.current().withValue(CtxConstants.JWT_CONTEXT_KEY, Optional.of(jwt));
             } catch (JwtException e) {

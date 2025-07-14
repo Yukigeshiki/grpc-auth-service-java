@@ -9,12 +9,15 @@ import org.springframework.security.oauth2.jwt.JwtDecoders;
 @Configuration
 public class JwtConfig {
 
-    @Value("${spring.authentication.project_id}")
-    private String PROJECT_ID;
+    private final String projectId;
+
+    public JwtConfig(@Value("${spring.authentication.project_id}") String projectId) {
+        this.projectId = projectId;
+    }
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        String issuerUri = "https://securetoken.google.com/" + PROJECT_ID;
+        var issuerUri = "https://securetoken.google.com/" + projectId;
         return JwtDecoders.fromIssuerLocation(issuerUri);
     }
 }

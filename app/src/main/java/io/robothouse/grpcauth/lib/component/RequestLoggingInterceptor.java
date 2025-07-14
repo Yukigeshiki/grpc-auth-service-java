@@ -23,13 +23,13 @@ public class RequestLoggingInterceptor implements ServerInterceptor {
             Metadata headers,
             ServerCallHandler<ReqT, RespT> next
     ) {
-        String methodName = call.getMethodDescriptor().getFullMethodName();
-        String requestId = UUID.randomUUID().toString();
+        var methodName = call.getMethodDescriptor().getFullMethodName();
+        var requestId = UUID.randomUUID().toString();
 
         MDC.put("requestId", requestId);
         log.info("Incoming gRPC request for method: {}", methodName);
 
-        Context ctx = Context.current().withValue(CtxConstants.REQUEST_ID_CONTEXT_KEY, requestId);
+        var ctx = Context.current().withValue(CtxConstants.REQUEST_ID_CONTEXT_KEY, requestId);
         return Contexts.interceptCall(ctx, call, headers, next);
     }
 }

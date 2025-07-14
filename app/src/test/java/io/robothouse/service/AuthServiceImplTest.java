@@ -30,13 +30,13 @@ class AuthServiceImplTest {
 
     @Test
     void validateTokenWithValidJwt() {
-        Optional<Jwt> jwtOptional = Optional.of(mock(Jwt.class));
-        Context context = Context.current()
+        var jwtOptional = Optional.of(mock(Jwt.class));
+        var context = Context.current()
                 .withValue(CtxConstants.JWT_CONTEXT_KEY, jwtOptional)
                 .withValue(CtxConstants.REQUEST_ID_CONTEXT_KEY, "");
-        Context previousContext = context.attach();
-        Empty request = Empty.getDefaultInstance();
-        ArgumentCaptor<AuthResponse> responseCaptor = ArgumentCaptor.forClass(AuthResponse.class);
+        var previousContext = context.attach();
+        var request = Empty.getDefaultInstance();
+        var responseCaptor = ArgumentCaptor.forClass(AuthResponse.class);
 
         tokenService.authenticate(request, responseObserver);
 
@@ -44,7 +44,7 @@ class AuthServiceImplTest {
         Mockito.verify(responseObserver).onCompleted();
         context.detach(previousContext);
 
-        AuthResponse response = responseCaptor.getValue();
+        var response = responseCaptor.getValue();
         assertTrue(response.getPayload().getSuccess());
         assertEquals(0, response.getPayload().getStatusCode());
         assertEquals("Authentication successful.", response.getPayload().getStatusMessage());
@@ -52,13 +52,13 @@ class AuthServiceImplTest {
 
     @Test
     void validateTokenWithInvalidJwt() {
-        Optional<Jwt> jwtOptional = Optional.empty();
-        Context context = Context.current()
+        var jwtOptional = Optional.<Jwt>empty();
+        var context = Context.current()
                 .withValue(CtxConstants.JWT_CONTEXT_KEY, jwtOptional)
                 .withValue(CtxConstants.REQUEST_ID_CONTEXT_KEY, "");
-        Context previousContext = context.attach();
-        Empty request = Empty.getDefaultInstance();
-        ArgumentCaptor<AuthResponse> responseCaptor = ArgumentCaptor.forClass(AuthResponse.class);
+        var previousContext = context.attach();
+        var request = Empty.getDefaultInstance();
+        var responseCaptor = ArgumentCaptor.forClass(AuthResponse.class);
 
         tokenService.authenticate(request, responseObserver);
 
@@ -66,7 +66,7 @@ class AuthServiceImplTest {
         Mockito.verify(responseObserver).onCompleted();
         context.detach(previousContext);
 
-        AuthResponse response = responseCaptor.getValue();
+        var response = responseCaptor.getValue();
         assertFalse(response.getPayload().getSuccess());
         assertEquals(16, response.getPayload().getStatusCode());
         assertEquals("Authentication failed: Missing or invalid JWT token.", response.getPayload().getStatusMessage());
@@ -74,13 +74,12 @@ class AuthServiceImplTest {
 
     @Test
     void validateTokenWithNullJwt() {
-        Context context = Context.current()
-                .withValue(CtxConstants.JWT_CONTEXT_KEY, Optional.empty())
+        var context = Context.current()
+                .withValue(CtxConstants.JWT_CONTEXT_KEY, Optional.<Jwt>empty())
                 .withValue(CtxConstants.REQUEST_ID_CONTEXT_KEY, "");
-        ;
-        Context previousContext = context.attach();
-        Empty request = Empty.getDefaultInstance();
-        ArgumentCaptor<AuthResponse> responseCaptor = ArgumentCaptor.forClass(AuthResponse.class);
+        var previousContext = context.attach();
+        var request = Empty.getDefaultInstance();
+        var responseCaptor = ArgumentCaptor.forClass(AuthResponse.class);
 
         tokenService.authenticate(request, responseObserver);
 
@@ -88,7 +87,7 @@ class AuthServiceImplTest {
         Mockito.verify(responseObserver).onCompleted();
         context.detach(previousContext);
 
-        AuthResponse response = responseCaptor.getValue();
+        var response = responseCaptor.getValue();
         assertFalse(response.getPayload().getSuccess());
         assertEquals(16, response.getPayload().getStatusCode());
         assertEquals("Authentication failed: Missing or invalid JWT token.", response.getPayload().getStatusMessage());

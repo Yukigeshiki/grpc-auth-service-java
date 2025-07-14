@@ -18,21 +18,20 @@ public class AuthServiceImpl extends AuthServiceGrpc.AuthServiceImplBase {
 
     @Override
     public void authenticate(Empty request, StreamObserver<AuthResponse> responseObserver) {
-        String timestamp = OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        String requestId = CtxConstants.REQUEST_ID_CONTEXT_KEY.get();
+        var timestamp = OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        var requestId = CtxConstants.REQUEST_ID_CONTEXT_KEY.get();
 
-        AuthPayload.Builder payloadBuilder = AuthPayload.newBuilder();
-        if (CtxConstants.JWT_CONTEXT_KEY.get().isPresent()) {
-            payloadBuilder.setSuccess(true)
-                    .setStatusCode(0)
-                    .setStatusMessage("Authentication successful.");
-        } else {
-            payloadBuilder.setSuccess(false)
-                    .setStatusCode(16)
-                    .setStatusMessage("Authentication failed: Missing or invalid JWT token.");
-        }
+        var payloadBuilder = CtxConstants.JWT_CONTEXT_KEY.get().isPresent() ?
+                AuthPayload.newBuilder()
+                        .setSuccess(true)
+                        .setStatusCode(0)
+                        .setStatusMessage("Authentication successful.") :
+                AuthPayload.newBuilder()
+                        .setSuccess(false)
+                        .setStatusCode(16)
+                        .setStatusMessage("Authentication failed: Missing or invalid JWT token.");
 
-        AuthResponse response = AuthResponse.newBuilder()
+        var response = AuthResponse.newBuilder()
                 .setRequestId(requestId)
                 .setDatetime(timestamp)
                 .setPayload(payloadBuilder)
