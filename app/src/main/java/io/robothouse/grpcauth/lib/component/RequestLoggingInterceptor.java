@@ -11,12 +11,18 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+/**
+ * gRPC server interceptor that provides request logging and distributed tracing capabilities.
+ */
 @Log4j2
 @Component
 @GlobalServerInterceptor
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class RequestLoggingInterceptor implements ServerInterceptor {
 
+    /**
+     * Intercepts incoming gRPC calls to add logging and request tracking.
+     */
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(
             ServerCall<ReqT, RespT> call,
@@ -30,6 +36,26 @@ public class RequestLoggingInterceptor implements ServerInterceptor {
         log.info("Incoming gRPC request for method: {}", methodName);
 
         var ctx = Context.current().withValue(CtxConstants.REQUEST_ID_CONTEXT_KEY, requestId);
-        return Contexts.interceptCall(ctx, call, headers, next);
+        var listener = Contexts.interceptCall(ctx, call, headers, next);
+
+        return new ForwardingServerCallListener.SimpleForwardingServerCallListener<>(listener) {
+            @Override
+            public void onComplete() {
+                try {
+                    super.onComplete();
+                } finally {
+                    MDC.remove("requestId");
+                }
+            }
+
+            @Override
+            public void onCancel() {
+                try {
+                    super.onCancel();
+                } finally {
+                    MDC.remove("requestId");
+                }
+            }
+        };
     }
 }

@@ -12,13 +12,13 @@ service AuthService {
 
 message AuthPayload {
   bool success = 1;
-  int32 statusCode = 2;
-  string statusMessage = 3;
+  int32 status_code = 2;
+  string status_message = 3;
 }
 
 message AuthResponse {
   // The unique request identifier.
-  string requestId = 1;
+  string request_id = 1;
   // The date/time when the response was generated.
   string datetime = 2;
   // Nested payload containing the authentication result.

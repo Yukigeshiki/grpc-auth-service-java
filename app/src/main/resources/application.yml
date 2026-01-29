@@ -3,7 +3,10 @@ spring:
     name: grpcauth
   authentication:
     project_id: ${PROJECT_ID:grpc-identity-platform-test}
+    issuer_uri: ${ISSUER_URI:https://securetoken.google.com/}
   grpc:
     server:
       reflection:
-        enabled: true # should be set to false in production
+        enabled: ${GRPC_REFLECTION_ENABLED:false}
+      health:
+      enabled: true
