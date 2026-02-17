@@ -21,6 +21,11 @@ import java.util.UUID;
 public class RequestLoggingInterceptor implements ServerInterceptor {
 
     /**
+     * MDC key for the unique request identifier used in log entries.
+     */
+    private static final String MDC_REQUEST_ID_KEY = "requestId";
+
+    /**
      * Intercepts incoming gRPC calls to add logging and request tracking.
      */
     @Override
@@ -32,7 +37,7 @@ public class RequestLoggingInterceptor implements ServerInterceptor {
         var methodName = call.getMethodDescriptor().getFullMethodName();
         var requestId = UUID.randomUUID().toString();
 
-        MDC.put("requestId", requestId);
+        MDC.put(MDC_REQUEST_ID_KEY, requestId);
         log.info("Incoming gRPC request for method: {}", methodName);
 
         var ctx = Context.current().withValue(CtxConstants.REQUEST_ID_CONTEXT_KEY, requestId);
@@ -44,7 +49,7 @@ public class RequestLoggingInterceptor implements ServerInterceptor {
                 try {
                     super.onComplete();
                 } finally {
-                    MDC.remove("requestId");
+                    MDC.remove(MDC_REQUEST_ID_KEY);
                 }
             }
 
@@ -53,7 +58,7 @@ public class RequestLoggingInterceptor implements ServerInterceptor {
                 try {
                     super.onCancel();
                 } finally {
-                    MDC.remove("requestId");
+                    MDC.remove(MDC_REQUEST_ID_KEY);
                 }
             }
         };

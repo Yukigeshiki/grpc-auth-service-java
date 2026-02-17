@@ -25,7 +25,9 @@ class AuthServiceImplTest {
 
     private AuthServiceImpl authService;
 
-    /** Mock observer for capturing gRPC responses. */
+    /**
+     * Mock observer for capturing gRPC responses.
+     */
     private StreamObserver<AuthResponse> responseObserver;
 
     @BeforeEach
@@ -38,9 +40,9 @@ class AuthServiceImplTest {
     /**
      * Tests authentication with a valid JWT token in the context.
      *
-     * Given: A gRPC context containing a valid (mocked) JWT token
-     * When: The authenticate method is called
-     * Then: The response should indicate success with status code 0
+     * <p>Given: A gRPC context containing a valid (mocked) JWT token.</p>
+     * <p>When: The authenticate method is called.</p>
+     * <p>Then: The response should indicate success with status code 0.</p>
      */
     @Test
     void authenticateWithValidJwt() {
@@ -68,9 +70,9 @@ class AuthServiceImplTest {
     /**
      * Tests authentication with an empty JWT optional in the context.
      *
-     * Given: A gRPC context containing an empty Optional (no JWT)
-     * When: The authenticate method is called
-     * Then: An UNAUTHENTICATED status exception should be thrown
+     * <p>Given: A gRPC context containing an empty Optional (no JWT).</p>
+     * <p>When: The authenticate method is called.</p>
+     * <p>Then: An UNAUTHENTICATED status exception should be thrown.</p>
      */
     @Test
     void authenticateWithEmptyJwt() {
@@ -98,14 +100,14 @@ class AuthServiceImplTest {
     /**
      * Tests authentication when JWT context contains empty Optional.
      *
-     * Given: A gRPC context with empty JWT Optional
-     * When: The authenticate method is called
-     * Then: An UNAUTHENTICATED status exception should be thrown
+     * <p>Given: A gRPC context with empty JWT Optional.</p>
+     * <p>When: The authenticate method is called.</p>
+     * <p>Then: An UNAUTHENTICATED status exception should be thrown.</p>
      */
     @Test
     void authenticateWithEmptyJwtOptional() {
         var context = Context.current()
-                .withValue(CtxConstants.JWT_CONTEXT_KEY, Optional.<Jwt>empty())
+                .withValue(CtxConstants.JWT_CONTEXT_KEY, Optional.empty())
                 .withValue(CtxConstants.REQUEST_ID_CONTEXT_KEY, "test-request-id");
         var previousContext = context.attach();
         var request = Empty.getDefaultInstance();
@@ -125,9 +127,9 @@ class AuthServiceImplTest {
     /**
      * Tests that missing request ID defaults to "unknown".
      *
-     * Given: A gRPC context with valid JWT but no request ID
-     * When: The authenticate method is called
-     * Then: The response should contain "unknown" as the request ID
+     * <p>Given: A gRPC context with valid JWT but no request ID.</p>
+     * <p>When: The authenticate method is called.</p>
+     * <p>Then: The response should contain "unknown" as the request ID.</p>
      */
     @Test
     void authenticateWithMissingRequestId() {
